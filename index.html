@@ -188,6 +188,8 @@
   @keyframes cardEnter{ from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:translateY(0);} }
   .card.card-enter{ animation:cardEnter .4s cubic-bezier(.22,1,.36,1) backwards; }
   .card-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .vendor-cat-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-top:-4px; }
+  .vendor-cat-tag{ font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--text-dim); background:var(--surface-2); border:1px solid var(--line-soft); padding:3px 9px; border-radius:100px; }
   .card-title{font-family:'Oswald',sans-serif; text-transform:uppercase; font-size:19px; font-weight:600; letter-spacing:0.02em; display:inline-flex; align-items:center; gap:9px;}
   .vendor-badge{
     display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:50%;
@@ -521,7 +523,9 @@
   .toast.success{border-color:rgba(79,190,121,0.5); color:var(--green);}
   @keyframes toast-in{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
 
-  .empty-state{ grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--text-faint); font-family:'JetBrains Mono',monospace; font-size:13px; border:1px dashed var(--line); border-radius:var(--radius); }
+  .empty-state{ grid-column:1/-1; display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center; padding:50px 20px; color:var(--text-faint); font-family:'JetBrains Mono',monospace; font-size:13px; border:1px dashed var(--line); border-radius:var(--radius); }
+  .empty-state-icon{ font-size:34px; opacity:0.6; }
+  .empty-state p{ margin:0; max-width:340px; line-height:1.5; }
 
   footer{max-width:1100px; margin:40px auto 0; padding:0 20px 0; color:var(--text-faint); font-size:12px; font-family:'JetBrains Mono',monospace;}
 
@@ -1013,7 +1017,21 @@ function renderVendorCards(){
   document.getElementById('resultsCount').textContent = `Mostrando ${vendors.length} de ${totalCount} vendedores${catMatchNote}`;
 
   if(vendors.length===0){
-    grid.innerHTML = `<div class="empty-state">No se encontraron vendedores con ese nombre o categoría de producto.</div>`;
+    const hayFiltrosActivos = !!(term || freeShipOnly || favOnly || selectedCategory);
+    if(hayFiltrosActivos){
+      grid.innerHTML = `<div class="empty-state">
+        <div class="empty-state-icon">🔍</div>
+        <p>No encontramos vendedores con esos filtros. Probá con otra búsqueda o limpiá los filtros.</p>
+        <button type="button" class="ghost-btn" id="clearFiltersBtn">Limpiar filtros</button>
+      </div>`;
+      const clearBtn = document.getElementById('clearFiltersBtn');
+      if(clearBtn) clearBtn.addEventListener('click', clearAllFilters);
+    }else{
+      grid.innerHTML = `<div class="empty-state">
+        <div class="empty-state-icon">🏪</div>
+        <p>Todavía no hay vendedores cargados en la comunidad. Volvé pronto.</p>
+      </div>`;
+    }
     return;
   }
 
@@ -1029,6 +1047,9 @@ function renderVendorCards(){
     }).join('');
     const note = v.note ? `<div class="note">${v.note}</div>` : '';
     const isFav = favorites.includes(v.id);
+    const categoryTags = (v.categories||[]).length
+      ? `<div class="vendor-cat-tags">${v.categories.map(c=>`<span class="vendor-cat-tag">${c.emoji?c.emoji+' ':''}${c.name}</span>`).join('')}</div>`
+      : '';
 
     let tags = '';
     if(v.tag) tags += `<span class="tag-warn">${v.tag}</span>`;
@@ -1051,6 +1072,7 @@ function renderVendorCards(){
           <button class="fav-btn ${isFav?'active':''}" data-favid="${v.id}" aria-label="Marcar como favorito" title="Favorito">${isFav?'★':'☆'}</button>
         </div>
       </div>
+      ${categoryTags}
       <div class="contacts">${contacts}</div>
       ${note}
       ${priceBlock}
@@ -1107,6 +1129,30 @@ function renderCategoryChips(){
       renderVendorCards();
     });
   });
+}
+
+// Resetea todos los filtros de la pestaña Vendedores (buscador, orden,
+// envío gratis, favoritos, categoría) -- usado por el botón "Limpiar
+// filtros" del estado vacío, para no dejar a alguien atascado en un
+// cruce de filtros que no matchea con nada.
+function clearAllFilters(){
+  searchTerm = '';
+  freeShipOnly = false;
+  favOnly = false;
+  selectedCategory = null;
+
+  const searchInput = document.getElementById('searchInput');
+  if(searchInput) searchInput.value = '';
+  const searchClear = document.getElementById('searchClear');
+  if(searchClear) searchClear.style.display = 'none';
+
+  const freeShipInput = document.getElementById('freeShipFilter');
+  if(freeShipInput){ freeShipInput.checked = false; freeShipInput.closest('.filter-chip').classList.remove('active'); }
+  const favInput = document.getElementById('favFilter');
+  if(favInput){ favInput.checked = false; favInput.closest('.filter-chip').classList.remove('active'); }
+
+  renderCategoryChips();
+  renderVendorCards();
 }
 function initTrackingTool(){
   const input = document.getElementById('trackingCodeInput');

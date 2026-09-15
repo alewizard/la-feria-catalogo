@@ -166,6 +166,15 @@
   .filter-chip:active{transform:translateY(0) scale(0.97);}
   .filter-chip input{ position:absolute; opacity:0; width:0; height:0; }
   .filter-chip.active{ background:var(--gold-grad); border-color:var(--amber); color:#1a1300; box-shadow:0 6px 16px -10px var(--amber-glow); }
+  .category-chips{ display:flex; flex-wrap:wrap; gap:8px; margin:-4px 0 14px; }
+  .cat-chip{
+    display:inline-flex; align-items:center; gap:6px; cursor:pointer; user-select:none;
+    font-size:12.5px; font-weight:500; color:var(--text-dim); background:var(--surface); border:1px solid var(--line);
+    padding:8px 14px; border-radius:100px; transition:border-color .15s ease, color .15s ease, background .15s ease, transform .12s ease;
+  }
+  .cat-chip:hover{border-color:var(--amber-dim); color:var(--text); transform:translateY(-1px);}
+  .cat-chip:active{transform:translateY(0) scale(0.97);}
+  .cat-chip.active{ background:var(--gold-grad); border-color:var(--amber); color:#1a1300; box-shadow:0 6px 16px -10px var(--amber-glow); }
 
   .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:16px;}
   .card{
@@ -194,6 +203,16 @@
   .contact-link{ font-size:12px; padding:5px 10px; border-radius:6px; border:1px solid var(--line-soft); color:var(--text-dim); text-decoration:none; background:rgba(0,0,0,0.15); transition:color .15s ease, border-color .15s ease, background .15s ease, transform .12s ease; display:inline-block; }
   .contact-link:hover{color:var(--amber); border-color:var(--amber-dim); background:rgba(242,183,5,0.08); transform:translateY(-1px);}
   .contact-link:active{transform:translateY(0) scale(0.96);}
+  .contact-link[data-type="whatsapp"]{ border-color:rgba(37,211,102,0.35); color:#3ddc73; }
+  .contact-link[data-type="whatsapp"]:hover{ color:#3ddc73; border-color:#25d366; background:rgba(37,211,102,0.1); }
+  .contact-link[data-type="telegram"]{ border-color:rgba(34,158,217,0.35); color:#5fc1ee; }
+  .contact-link[data-type="telegram"]:hover{ color:#5fc1ee; border-color:#229ed9; background:rgba(34,158,217,0.1); }
+  .contact-link[data-type="instagram"]{ border-color:rgba(225,48,108,0.35); color:#ea7bad; }
+  .contact-link[data-type="instagram"]:hover{ color:#ea7bad; border-color:#e1306c; background:rgba(225,48,108,0.1); }
+  .contact-link[data-type="tiktok"]{ border-color:rgba(255,255,255,0.28); color:#eaeaea; }
+  .contact-link[data-type="tiktok"]:hover{ color:#fff; border-color:rgba(255,255,255,0.55); background:rgba(255,255,255,0.08); }
+  .contact-link[data-type="facebook"]{ border-color:rgba(24,119,242,0.35); color:#7db4f7; }
+  .contact-link[data-type="facebook"]:hover{ color:#7db4f7; border-color:#1877f2; background:rgba(24,119,242,0.1); }
   .section-label{ font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-faint); margin:2px 0 -4px; }
   .price-list{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:4px 14px; font-size:13px;}
   .price-list li{display:flex; justify-content:space-between; gap:8px; border-bottom:1px dashed var(--line-soft); padding:3px 0; color:var(--text-dim);}
@@ -683,6 +702,7 @@ html{scroll-behavior:smooth;}
 <input id="favFilter" type="checkbox"/><span>★ Favoritos</span>
       </label>
 </div>
+<div class="category-chips" id="categoryChips"></div>
 <p class="hint" id="resultsCount" style="margin:-6px 0 14px;"></p>
 <div class="grid" id="vendorGrid"></div>
 <p class="hint" style="margin-top:16px; text-align:center;">📌 Esta página es un <strong>comparador informativo, no una tienda</strong>: no vendemos, no procesamos pagos ni somos parte de ninguna transacción. Todo se coordina directo con el vendedor. <a href="#" onclick="document.querySelector('[data-tab=&quot;legal&quot;]').click(); return false;">Ver términos de uso</a>.</p>
@@ -873,11 +893,13 @@ const p = (label, value, key) => ({label, value, key: key||null, num:n(value)});
 /* AUTO_VENDORS_START -- generado por comunidad_bot/public_catalog.py, no editar a mano */
 const BASE_VENDORS = [
   {id:'vendor-1', name:'Tienda de Prueba E2E',
-    contacts:[{label:'Escribinos por WhatsApp', url:'https://wa.me/5491100000001'},{label:'Canal de Telegram', url:'https://t.me/vendedor_prueba_e2e'},{label:'Catálogo', url:'https://wa.me/5491100000001?text=Hola'},{label:'Catálogo', url:'https://wa.me/5491100000002?text=Hola'},{label:'Catálogo', url:'https://wa.me/5491100000003?text=Hola'}],
+    contacts:[{label:'Escribinos por WhatsApp', url:'https://wa.me/5491100000001', type:'whatsapp'},{label:'Canal de Telegram', url:'https://t.me/vendedor_prueba_e2e', type:'telegram'},{label:'Catálogo', url:'https://wa.me/5491100000001?text=Hola', type:'catalogo'},{label:'Catálogo', url:'https://wa.me/5491100000002?text=Hola', type:'catalogo'},{label:'Catálogo', url:'https://wa.me/5491100000003?text=Hola', type:'catalogo'}],
+    categories:[{name:'Indumentaria', emoji:'👕'}],
     prices:[],
     shipping:[]},
   {id:'vendor-2', name:'Tienda de Ejemplo #2',
-    contacts:[{label:'Seguinos en Instagram', url:'https://instagram.com/tienda_ejemplo_2'},{label:'Escribinos por WhatsApp', url:'https://wa.me/5491100000002'},{label:'Catálogo completo', url:'https://drive.google.com/drive/folders/catalogo-demo-2'},{label:'Canal de Telegram', url:'https://t.me/vendedor_ejemplo_2'}],
+    contacts:[{label:'Seguinos en Instagram', url:'https://instagram.com/tienda_ejemplo_2', type:'instagram'},{label:'Escribinos por WhatsApp', url:'https://wa.me/5491100000002', type:'whatsapp'},{label:'Catálogo completo', url:'https://drive.google.com/drive/folders/catalogo-demo-2', type:'catalogo'},{label:'Canal de Telegram', url:'https://t.me/vendedor_ejemplo_2', type:'telegram'}],
+    categories:[{name:'Indumentaria', emoji:'👕'},{name:'Calzado', emoji:'👟'},{name:'Accesorios', emoji:'🎒'}],
     prices:[],
     shipping:[]}
 ];
@@ -888,6 +910,11 @@ let searchTerm = '';
 let sortMode = 'name';
 let freeShipOnly = false;
 let favOnly = false;
+let selectedCategory = null;
+const CONTACT_ICONS = {
+  whatsapp: '💬', telegram: '✈️', instagram: '📷', tiktok: '🎵',
+  facebook: '👍', catalogo: '📋', web: '🌐', otro: '🔗',
+};
 let favorites = [];
 let themePref = 'dark';
 let catalogSearchHistory = [];
@@ -962,6 +989,7 @@ function renderVendorCards(){
   });
   if(freeShipOnly) vendors = vendors.filter(hasFreeShipping);
   if(favOnly) vendors = vendors.filter(v=>favorites.includes(v.id));
+  if(selectedCategory) vendors = vendors.filter(v=>(v.categories||[]).some(c=>c.name===selectedCategory));
 
   if(sortMode==='name'){
     vendors.sort((a,b)=>a.name.localeCompare(b.name));
@@ -994,7 +1022,11 @@ function renderVendorCards(){
     const shipPills = v.shipping.map(s => `<span class="ship-pill">${s.label}: ${s.value}</span>`).join('');
     const priceBlock = v.prices.length ? `<div><div class="section-label">Precios</div><ul class="price-list">${priceItems}</ul></div>` : '';
     const shipBlock = v.shipping.length ? `<div><div class="section-label">Envío</div><div class="ship-row">${shipPills}</div></div>` : '';
-    const contacts = v.contacts.map(c => `<a class="contact-link" href="${c.url}" target="_blank" rel="noopener">${c.label}</a>`).join('');
+    const contacts = v.contacts.map(c => {
+      const type = c.type || 'otro';
+      const icon = CONTACT_ICONS[type] || CONTACT_ICONS.otro;
+      return `<a class="contact-link" data-type="${type}" href="${c.url}" target="_blank" rel="noopener">${icon} ${c.label}</a>`;
+    }).join('');
     const note = v.note ? `<div class="note">${v.note}</div>` : '';
     const isFav = favorites.includes(v.id);
 
@@ -1048,6 +1080,33 @@ function populateSortSelect(){
     <option value="cat:${c.k}:asc">Ordenar: ${c.l} (menor a mayor)</option>
     <option value="cat:${c.k}:desc">Ordenar: ${c.l} (mayor a menor)</option>
   `).join('');
+}
+
+// Chips de categoría real (Indumentaria, Calzado, etc. -- cargadas por
+// el vendedor, no inventadas) para navegar el grid tocando en vez de
+// tener que escribir en el buscador.
+function renderCategoryChips(){
+  const container = document.getElementById('categoryChips');
+  if(!container) return;
+  const seen = new Map();
+  BASE_VENDORS.forEach(v=>(v.categories||[]).forEach(c=>{
+    if(c.name && !seen.has(c.name)) seen.set(c.name, c.emoji || '');
+  }));
+  if(seen.size === 0){ container.innerHTML = ''; return; }
+
+  const allChip = `<button type="button" class="cat-chip ${selectedCategory===null?'active':''}" data-cat="">Todas</button>`;
+  const chips = Array.from(seen.entries()).map(([name, emoji]) =>
+    `<button type="button" class="cat-chip ${selectedCategory===name?'active':''}" data-cat="${name}">${emoji?emoji+' ':''}${name}</button>`
+  ).join('');
+  container.innerHTML = allChip + chips;
+
+  container.querySelectorAll('.cat-chip').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      selectedCategory = btn.dataset.cat || null;
+      container.querySelectorAll('.cat-chip').forEach(b=>b.classList.toggle('active', b===btn));
+      renderVendorCards();
+    });
+  });
 }
 function initTrackingTool(){
   const input = document.getElementById('trackingCodeInput');
@@ -1431,6 +1490,7 @@ setTimeout(hideLoadingOverlay, 4000);
     initTabs();
     applyTheme();
     populateSortSelect();
+    renderCategoryChips();
 
     // Fondo aleatorio entre las dos fotos de estadio
     const photoVars = ['--photo-wide', '--photo-tall'];

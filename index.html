@@ -76,6 +76,19 @@
     color:#fdfdf7; text-align:center; padding:16px 12px; font-family:'JetBrains Mono',monospace;
     font-size:12px; letter-spacing:0.18em; text-transform:uppercase; text-shadow:0 1px 5px rgba(0,0,0,0.85);
   }
+  .community-banner{
+    display:flex; align-items:center; gap:12px; margin:16px 20px 0; padding:14px 18px;
+    border-radius:14px; text-decoration:none; background:var(--gold-grad); color:#1a1300;
+    box-shadow:0 10px 24px -8px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.35);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .community-banner:hover{ transform:translateY(-1px); box-shadow:0 14px 28px -8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.35); }
+  .community-banner:active{ transform:translateY(0) scale(0.99); }
+  .community-banner-icon{ font-size:22px; flex-shrink:0; }
+  .community-banner-text{ font-size:14px; line-height:1.4; flex:1; }
+  .community-banner-text strong{ font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:.02em; }
+  .community-banner-arrow{ font-size:18px; flex-shrink:0; }
+  @media (max-width:620px){ .community-banner{ margin:14px 14px 0; padding:12px 14px; gap:10px; } .community-banner-text{ font-size:13px; } }
   ::selection{background:var(--amber);color:#1a1300;}
   a{color:inherit;}
   ::-webkit-scrollbar{height:9px; width:9px;}
@@ -688,6 +701,11 @@ html{scroll-behavior:smooth;}
 <div aria-hidden="true" class="goal-net-bg"></div>
 <div aria-hidden="true" class="ball-watermark-bg"></div>
 <div class="pitch-ticker">Vendedores de La Feria</div>
+<a class="community-banner" href="https://t.me/+FatP2mW19KtmOTAx" target="_blank" rel="noopener">
+<span class="community-banner-icon" aria-hidden="true">✈️</span>
+<span class="community-banner-text"><strong>Unite al grupo de Telegram</strong> — preguntá, seguí tus envíos, dejá tu reseña y enterate de lo nuevo</span>
+<span class="community-banner-arrow" aria-hidden="true">→</span>
+</a>
 <nav class="tabs" style="margin-top:20px;">
 <button class="tab-btn active" data-tab="lista">Vendedores</button>
 <button class="tab-btn" data-tab="buscar">🔎 Buscar en catálogos</button>

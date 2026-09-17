@@ -538,17 +538,6 @@
   .empty-state{ grid-column:1/-1; display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center; padding:50px 20px; color:var(--text-faint); font-family:'JetBrains Mono',monospace; font-size:13px; border:1px dashed var(--line); border-radius:var(--radius); }
   .empty-state-icon{ font-size:34px; opacity:0.6; }
   .empty-state p{ margin:0; max-width:340px; line-height:1.5; }
-  .share-fab{
-    position:fixed; right:18px; bottom:18px; z-index:50;
-    width:56px; height:56px; border-radius:50%; border:none; cursor:pointer;
-    background:var(--gold-grad); color:#1a1300; font-size:23px;
-    display:flex; align-items:center; justify-content:center;
-    box-shadow:0 10px 24px -8px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.35);
-    transition:transform .15s ease, box-shadow .15s ease;
-  }
-  .share-fab:hover{ transform:translateY(-2px) scale(1.05); box-shadow:0 14px 28px -8px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.35); }
-  .share-fab:active{ transform:translateY(0) scale(0.93); }
-  @media (max-width:620px){ .share-fab{ right:14px; bottom:14px; width:50px; height:50px; font-size:20px; } }
 
   footer{max-width:1100px; margin:40px auto 0; padding:0 20px 0; color:var(--text-faint); font-size:12px; font-family:'JetBrains Mono',monospace;}
 
@@ -698,7 +687,6 @@ html{scroll-behavior:smooth;}
 <body>
 <div aria-hidden="true" class="goal-net-bg"></div>
 <div aria-hidden="true" class="ball-watermark-bg"></div>
-<button aria-label="Compartir este catálogo" class="share-fab" id="shareCatalogBtn" title="Compartir este catálogo" type="button">📤</button>
 <div class="pitch-ticker">Vendedores de La Feria</div>
 <nav class="tabs" style="margin-top:20px;">
 <button class="tab-btn active" data-tab="lista">Vendedores</button>
@@ -1571,28 +1559,6 @@ setTimeout(hideLoadingOverlay, 4000);
       themePref = themePref==='light' ? 'dark' : 'light';
       applyTheme();
       saveTheme();
-    });
-    document.getElementById('shareCatalogBtn').addEventListener('click', async ()=>{
-      const shareData = {
-        title: 'La Feria — Vendedores',
-        text: 'Directorio de vendedores de la comunidad La Feria: indumentaria, calzado, accesorios y más.',
-        url: 'https://alewizard.github.io/la-feria-catalogo/',
-      };
-      if(navigator.share){
-        try{ await navigator.share(shareData); }
-        catch(e){ /* el usuario canceló el cuadro de compartir -- no es un error */ }
-        return;
-      }
-      if(navigator.clipboard){
-        try{
-          await navigator.clipboard.writeText(shareData.url);
-          showToast('Link copiado -- pegalo donde quieras compartirlo', 'success');
-        }catch(e){
-          showToast('No se pudo copiar el link automáticamente', 'error');
-        }
-        return;
-      }
-      showToast('Copiá el link desde la barra de direcciones del navegador', 'error');
     });
     document.getElementById('searchInput').addEventListener('input', (e)=>{
       searchTerm = e.target.value;

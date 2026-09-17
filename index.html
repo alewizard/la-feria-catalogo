@@ -580,6 +580,18 @@
   body.light-theme::before{ opacity:0.025; }
   body.light-theme::after{ background: radial-gradient(130% 95% at 50% 28%, transparent 62%, rgba(0,0,0,0.05) 100%); }
   body.light-theme ::selection{ background:var(--amber); color:#fff; }
+  body.light-theme .contact-link,
+  body.light-theme .mini-btn{ background:var(--surface-2); }
+  body.light-theme .contact-link[data-type="whatsapp"]{ color:#1f9d52; border-color:rgba(31,157,82,0.45); }
+  body.light-theme .contact-link[data-type="whatsapp"]:hover{ color:#1f9d52; border-color:#1f9d52; background:rgba(31,157,82,0.12); }
+  body.light-theme .contact-link[data-type="telegram"]{ color:#1678a8; border-color:rgba(22,120,168,0.45); }
+  body.light-theme .contact-link[data-type="telegram"]:hover{ color:#1678a8; border-color:#1678a8; background:rgba(22,120,168,0.12); }
+  body.light-theme .contact-link[data-type="instagram"]{ color:#c22a6c; border-color:rgba(194,42,108,0.45); }
+  body.light-theme .contact-link[data-type="instagram"]:hover{ color:#c22a6c; border-color:#c22a6c; background:rgba(194,42,108,0.12); }
+  body.light-theme .contact-link[data-type="tiktok"]{ color:#2a2a2a; border-color:rgba(0,0,0,0.4); }
+  body.light-theme .contact-link[data-type="tiktok"]:hover{ color:#000; border-color:rgba(0,0,0,0.6); background:rgba(0,0,0,0.08); }
+  body.light-theme .contact-link[data-type="facebook"]{ color:#155fc7; border-color:rgba(21,95,199,0.45); }
+  body.light-theme .contact-link[data-type="facebook"]:hover{ color:#155fc7; border-color:#155fc7; background:rgba(21,95,199,0.12); }
 
 /* Mejoras de navegación y lectura para los tutoriales */
 .guide-progress{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;margin:0 0 18px;}

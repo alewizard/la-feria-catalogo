@@ -213,6 +213,10 @@
   @keyframes cardEnter{ from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:translateY(0);} }
   .card.card-enter{ animation:cardEnter .4s cubic-bezier(.22,1,.36,1) backwards; }
   .card-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .vendor-rating{ display:flex; align-items:center; gap:7px; margin-top:-6px; font-size:13px; }
+  .vendor-rating-stars{ color:var(--amber); letter-spacing:1px; font-size:14px; }
+  .vendor-rating-num{ font-family:'JetBrains Mono',monospace; font-weight:700; color:var(--text); }
+  .vendor-rating-count{ font-family:'JetBrains Mono',monospace; color:var(--text-faint); }
   .vendor-cat-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-top:-4px; }
   .vendor-cat-tag{ font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--text-dim); background:var(--surface-2); border:1px solid var(--line-soft); padding:3px 9px; border-radius:100px; }
   .card-title{font-family:'Oswald',sans-serif; text-transform:uppercase; font-size:19px; font-weight:600; letter-spacing:0.02em; display:inline-flex; align-items:center; gap:9px;}
@@ -1089,6 +1093,14 @@ function renderVendorCards(){
     }).join('');
     const note = v.note ? `<div class="note">${v.note}</div>` : '';
     const isFav = favorites.includes(v.id);
+    const ratingBlock = (v.reviewCount > 0)
+      ? (() => {
+          const filled = Math.round(v.rating);
+          const stars = '★'.repeat(filled) + '☆'.repeat(5 - filled);
+          const plural = v.reviewCount !== 1 ? 's' : '';
+          return `<div class="vendor-rating"><span class="vendor-rating-stars">${stars}</span><span class="vendor-rating-num">${v.rating.toFixed(1)}</span><span class="vendor-rating-count">(${v.reviewCount} reseña${plural})</span></div>`;
+        })()
+      : '';
     const categoryTags = (v.categories||[]).length
       ? `<div class="vendor-cat-tags">${v.categories.map(c=>`<span class="vendor-cat-tag">${c.emoji?c.emoji+' ':''}${c.name}</span>`).join('')}</div>`
       : '';
@@ -1114,6 +1126,7 @@ function renderVendorCards(){
           <button class="fav-btn ${isFav?'active':''}" data-favid="${v.id}" aria-label="Marcar como favorito" title="Favorito">${isFav?'★':'☆'}</button>
         </div>
       </div>
+      ${ratingBlock}
       ${categoryTags}
       <div class="contacts">${contacts}</div>
       ${note}

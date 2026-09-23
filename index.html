@@ -227,6 +227,9 @@
     transition:box-shadow .2s ease, transform .2s ease;
   }
   .card:hover .vendor-badge{ box-shadow:0 2px 8px rgba(0,0,0,0.4), 0 0 0 5px rgba(242,183,5,0.22); transform:scale(1.06); }
+  .vendor-status-badge{ font-size:10.5px; font-family:'JetBrains Mono',monospace; font-weight:700; padding:3px 8px; border-radius:100px; white-space:nowrap; }
+  .vendor-status-verificado{ color:var(--green); border:1px solid rgba(79,190,121,0.4); background:rgba(79,190,121,0.1); }
+  .vendor-status-destacado{ color:var(--amber); border:1px solid rgba(242,183,5,0.4); background:rgba(242,183,5,0.1); }
   .tag-warn{ font-size:10.5px; font-family:'JetBrains Mono',monospace; color:var(--red); border:1px solid rgba(226,72,61,0.4); background:rgba(226,72,61,0.08); padding:3px 7px; border-radius:5px; white-space:nowrap; }
   .tag-free{ font-size:10.5px; font-family:'JetBrains Mono',monospace; color:var(--amber); border:1px solid rgba(242,183,5,0.4); background:rgba(242,183,5,0.08); padding:3px 7px; border-radius:5px; white-space:nowrap; }
   .tag-row{display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;}
@@ -946,12 +949,14 @@ const BASE_VENDORS = [
     contacts:[{label:'Escribinos por WhatsApp', url:'https://wa.me/5491100000001', type:'whatsapp'},{label:'Canal de Telegram', url:'https://t.me/vendedor_prueba_e2e', type:'telegram'},{label:'Productos deportivos', url:'https://hema168.x.yupoo.com/', type:'catalogo'},{label:'Relojes', url:'https://macc.tangma2088.com/category_383.html?path=0_383', type:'catalogo'},{label:'Catálogo', url:'https://wa.me/5491100000001?text=Hola', type:'catalogo'}],
     categories:[{name:'Indumentaria', emoji:'👕'}],
     rating:4.0, reviewCount:1,
+    status:'',
     prices:[],
     shipping:[]},
   {id:'vendor-2', name:'Tiro Libre',
     contacts:[{label:'Seguinos en Instagram', url:'https://instagram.com/tienda_ejemplo_2', type:'instagram'},{label:'Escribinos por WhatsApp', url:'https://wa.me/5491100000002', type:'whatsapp'},{label:'Catálogo completo', url:'https://drive.google.com/drive/folders/catalogo-demo-2', type:'catalogo'},{label:'Canal de Telegram', url:'https://t.me/vendedor_ejemplo_2', type:'telegram'}],
     categories:[{name:'Indumentaria', emoji:'👕'},{name:'Calzado', emoji:'👟'},{name:'Accesorios', emoji:'🎒'}],
     rating:0, reviewCount:0,
+    status:'',
     prices:[],
     shipping:[]}
 ];
@@ -1106,6 +1111,15 @@ function renderVendorCards(){
     const categoryTags = (v.categories||[]).length
       ? `<div class="vendor-cat-tags">${v.categories.map(c=>`<span class="vendor-cat-tag">${c.emoji?c.emoji+' ':''}${c.name}</span>`).join('')}</div>`
       : '';
+    // Mismo sello que ya se ve en su topic de Telegram y en su banner --
+    // sin esto, quien entra a la web desde Google o un link compartido
+    // (sin pasar por el grupo) no tenía forma de ver esta señal de
+    // confianza.
+    const statusBadge = v.status === 'verificado'
+      ? `<span class="vendor-status-badge vendor-status-verificado">✅ Verificado</span>`
+      : v.status === 'destacado'
+        ? `<span class="vendor-status-badge vendor-status-destacado">🌟 Destacado</span>`
+        : '';
 
     let tags = '';
     if(v.tag) tags += `<span class="tag-warn">${v.tag}</span>`;
@@ -1122,7 +1136,7 @@ function renderVendorCards(){
 
     return `<div class="card card-enter" style="animation-delay:${Math.min(idx,10)*35}ms">
       <div class="card-head">
-        <span class="card-title"><span class="vendor-badge">${v.name.charAt(0).toUpperCase()}</span>${v.name}</span>
+        <span class="card-title"><span class="vendor-badge">${v.name.charAt(0).toUpperCase()}</span>${v.name}${statusBadge}</span>
         <div style="display:flex; align-items:flex-start; gap:8px;">
           <div class="tag-row">${tags}</div>
           <button class="fav-btn ${isFav?'active':''}" data-favid="${v.id}" aria-label="Marcar como favorito" title="Favorito">${isFav?'★':'☆'}</button>

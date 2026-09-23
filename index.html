@@ -230,6 +230,7 @@
   .vendor-status-badge{ font-size:10.5px; font-family:'JetBrains Mono',monospace; font-weight:700; padding:3px 8px; border-radius:100px; white-space:nowrap; }
   .vendor-status-verificado{ color:var(--green); border:1px solid rgba(79,190,121,0.4); background:rgba(79,190,121,0.1); }
   .vendor-status-destacado{ color:var(--amber); border:1px solid rgba(242,183,5,0.4); background:rgba(242,183,5,0.1); }
+  .vendor-month-badge{ font-size:10.5px; font-family:'JetBrains Mono',monospace; font-weight:700; padding:3px 9px; border-radius:100px; white-space:nowrap; color:#1a1300; background:linear-gradient(135deg, var(--amber), #ffe9a8); box-shadow:0 1px 4px rgba(242,183,5,0.35); }
   .tag-warn{ font-size:10.5px; font-family:'JetBrains Mono',monospace; color:var(--red); border:1px solid rgba(226,72,61,0.4); background:rgba(226,72,61,0.08); padding:3px 7px; border-radius:5px; white-space:nowrap; }
   .tag-free{ font-size:10.5px; font-family:'JetBrains Mono',monospace; color:var(--amber); border:1px solid rgba(242,183,5,0.4); background:rgba(242,183,5,0.08); padding:3px 7px; border-radius:5px; white-space:nowrap; }
   .tag-row{display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;}
@@ -945,18 +946,11 @@ const p = (label, value, key) => ({label, value, key: key||null, num:n(value)});
 
 /* AUTO_VENDORS_START -- generado por comunidad_bot/public_catalog.py, no editar a mano */
 const BASE_VENDORS = [
-  {id:'vendor-1', name:'Fuerte al Medio',
-    contacts:[{label:'Escribinos por WhatsApp', url:'https://wa.me/5491100000001', type:'whatsapp'},{label:'Canal de Telegram', url:'https://t.me/vendedor_prueba_e2e', type:'telegram'},{label:'Productos deportivos', url:'https://hema168.x.yupoo.com/', type:'catalogo'},{label:'Relojes', url:'https://macc.tangma2088.com/category_383.html?path=0_383', type:'catalogo'},{label:'Catálogo', url:'https://wa.me/5491100000001?text=Hola', type:'catalogo'}],
-    categories:[{name:'Indumentaria', emoji:'👕'}],
-    rating:4.0, reviewCount:1,
-    status:'',
-    prices:[],
-    shipping:[]},
-  {id:'vendor-2', name:'Tiro Libre',
-    contacts:[{label:'Seguinos en Instagram', url:'https://instagram.com/tienda_ejemplo_2', type:'instagram'},{label:'Escribinos por WhatsApp', url:'https://wa.me/5491100000002', type:'whatsapp'},{label:'Catálogo completo', url:'https://drive.google.com/drive/folders/catalogo-demo-2', type:'catalogo'},{label:'Canal de Telegram', url:'https://t.me/vendedor_ejemplo_2', type:'telegram'}],
-    categories:[{name:'Indumentaria', emoji:'👕'},{name:'Calzado', emoji:'👟'},{name:'Accesorios', emoji:'🎒'}],
+  {id:'vendor-1', name:'Único candidato',
+    contacts:[],
+    categories:[],
     rating:0, reviewCount:0,
-    status:'',
+    status:'', monthWinner:true,
     prices:[],
     shipping:[]}
 ];
@@ -1120,6 +1114,10 @@ function renderVendorCards(){
       : v.status === 'destacado'
         ? `<span class="vendor-status-badge vendor-status-destacado">🌟 Destacado</span>`
         : '';
+    // No es excluyente con statusBadge -- un vendedor VERIFICADO puede
+    // ser TAMBIÉN el vendedor del mes, así que van los dos juntos si
+    // corresponde.
+    const monthBadge = v.monthWinner ? `<span class="vendor-month-badge">🏅 Vendedor del mes</span>` : '';
 
     let tags = '';
     if(v.tag) tags += `<span class="tag-warn">${v.tag}</span>`;
@@ -1136,7 +1134,7 @@ function renderVendorCards(){
 
     return `<div class="card card-enter" style="animation-delay:${Math.min(idx,10)*35}ms">
       <div class="card-head">
-        <span class="card-title"><span class="vendor-badge">${v.name.charAt(0).toUpperCase()}</span>${v.name}${statusBadge}</span>
+        <span class="card-title"><span class="vendor-badge">${v.name.charAt(0).toUpperCase()}</span>${v.name}${monthBadge}${statusBadge}</span>
         <div style="display:flex; align-items:flex-start; gap:8px;">
           <div class="tag-row">${tags}</div>
           <button class="fav-btn ${isFav?'active':''}" data-favid="${v.id}" aria-label="Marcar como favorito" title="Favorito">${isFav?'★':'☆'}</button>
